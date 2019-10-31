@@ -17,7 +17,7 @@ public class UserScoreRepositoryInMemory implements UserScoreRepository {
   private final Map<Level, Map<UserId, Score>> repository = new ConcurrentHashMap<>();
 
   @Override
-  public void save(Level level, UserScore userScore) {
+  public synchronized void save(Level level, UserScore userScore) {
     Map<UserId, Score> scoresFromLevel = repository.get(level);
     if (scoresFromLevel == null) {
       Map<UserId, Score> scores = new ConcurrentHashMap<>();
@@ -27,7 +27,6 @@ public class UserScoreRepositoryInMemory implements UserScoreRepository {
       Score currentScore = scoresFromLevel.get(userScore.userId());
       if (currentScore != null) {
         if (currentScore.value() < userScore.score().value()) {
-          scoresFromLevel.remove(userScore.userId());
           scoresFromLevel.put(userScore.userId(), userScore.score());
           repository.put(level, scoresFromLevel);
         }

@@ -62,6 +62,10 @@ I made some considerations that were not included in the statement:
 
 - There is no need to delete expired sessions. In case we should need it, we could use a java timer that could be executed every X seconds to delete them.
 
+- Server thread pool limited to current number of cpus.
+
+- User scores are in memory and never cleared, even only needs 15 top scores across all users. 
+
 - Return codes are all grouped to:
     - 200 -> everything worked fine
     - 405 -> method not allowed
